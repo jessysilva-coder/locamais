@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Locamais — Contrato de Locação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --verde: #1a6b2e;
+      --verde-claro: #2a8a3e;
+      --verde-muted: #e8f5ec;
+      --verde-border: #b6dfc2;
+      --branco: #ffffff;
+      --cinza-leve: #f7f9f8;
+      --cinza-texto: #4a5568;
+      --cinza-escuro: #1a202c;
+      --sombra: 0 4px 24px rgba(26,107,46,0.10);
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cinza-leve);
+      color: var(--cinza-escuro);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--verde);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+
+    .logo-mark {
+      width: 46px; height: 46px;
+      background: #fff;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--verde);
+      letter-spacing: -1px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+      padding: 52px 40px 44px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .hero p {
+      font-size: 15px;
+      opacity: 0.85;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      box-shadow: var(--sombra);
+      border: 1px solid var(--verde-border);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      background: var(--verde-muted);
+      border-bottom: 1px solid var(--verde-border);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header .icon {
+      width: 32px; height: 32px;
+      background: var(--verde);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .card-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--verde);
+    }
+
+    .card-body {
+      padding: 28px;
+    }
+
+    /* ── FORM ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--verde);
+    }
+
+    input {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      padding: 11px 14px;
+      border: 1.5px solid #d1e8d8;
+      border-radius: 8px;
+      background: var(--cinza-leve);
+      color: var(--cinza-escuro);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--verde);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(26,107,46,0.12);
+    }
+
+    input::placeholder { color: #a0aab4; }
+
+    /* ── CONTRATO PREVIEW ── */
+    .contract-preview {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--cinza-texto);
+      padding: 8px 0;
+    }
+
+    .contract-preview h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--cinza-escuro);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .contract-preview .highlight {
+      color: var(--verde);
+      font-weight: 600;
+      border-bottom: 1.5px dashed var(--verde-border);
+      padding-bottom: 1px;
+    }
+
+    .clause {
+      margin-bottom: 14px;
+    }
+
+    .clause strong {
+      color: var(--cinza-escuro);
+      font-weight: 600;
+    }
+
+    .assinaturas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .assinatura-linha {
+      border-top: 1.5px solid #b0b8c0;
+      padding-top: 8px;
+      font-size: 12px;
+      color: #8898aa;
+      text-align: center;
+    }
+
+    /* ── BOTÃO ── */
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 28px;
+      background: var(--verde);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 14px rgba(26,107,46,0.28);
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      background: var(--verde-claro);
+      box-shadow: 0 6px 20px rgba(26,107,46,0.36);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit svg { flex-shrink: 0; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--cinza-escuro);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #toast.success { background: var(--verde); }
+    #toast.error { background: #c0392b; }
+
+    /* ── LOADING ── */
+    .btn-submit .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { opacity: 0.7; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 12px;
+      color: #a0aab4;
+      border-top: 1px solid var(--verde-border);
+      background: #fff;
+    }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      .hero { padding: 36px 20px 30px; }
+      .hero h1 { font-size: 26px; }
+      .card-body { padding: 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .assinaturas { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">L+</div>
+    <div>
+      <div class="logo-text">Locamais</div>
+      <div class="logo-sub">Soluções em Locação</div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Contrato de Locação</h1>
+    <p>Preencha os dados abaixo para gerar seu contrato. Ao enviar, você receberá o PDF para download automaticamente.</p>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- FORMULÁRIO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h2>Dados do Locatário</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+
+          <div class="form-group full">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" placeholder="Ex: João da Silva Santos" autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" />
+          </div>
+
+          <div class="form-group">
+            <label for="data">Data de Início</label>
+            <input type="date" id="data" />
+          </div>
+
+          <div class="form-group full">
+            <label for="valor">Valor Mensal (R$)</label>
+            <input type="text" id="valor" placeholder="Ex: 1.500,00" />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÉVIA DO CONTRATO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h2>Pré-visualização do Contrato</h2>
+      </div>
+      <div class="card-body">
+        <div class="contract-preview" id="preview">
+
+          <h3>CONTRATO DE LOCAÇÃO DE EQUIPAMENTOS</h3>
+
+          <div class="clause">
+            <strong>LOCADORA:</strong> Locamais Soluções em Locação, inscrita no CNPJ sob o n.º ______________________, com sede na cidade de ______________________, doravante denominada simplesmente <strong>LOCADORA</strong>.
+          </div>
+
+          <div class="clause">
+            <strong>LOCATÁRIO:</strong> <span class="highlight" id="prev-nome">[ Nome do Locatário ]</span>, portador do CPF n.º <span class="highlight" id="prev-cpf">[ CPF ]</span>, doravante denominado simplesmente <strong>LOCATÁRIO</strong>.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 1ª – DO OBJETO</strong><br/>
+            O presente instrumento tem por objeto a locação de equipamento(s) descrito(s) em proposta comercial, conforme acordado entre as partes, para uso pelo LOCATÁRIO durante a vigência do contrato.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 2ª – DO PRAZO</strong><br/>
+            O contrato vigorará pelo prazo de 12 (doze) meses, com início em <span class="highlight" id="prev-data">[ Data de Início ]</span>, podendo ser renovado por igual período mediante acordo escrito entre as partes.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 3ª – DO VALOR E FORMA DE PAGAMENTO</strong><br/>
+            O valor mensal da locação é de <span class="highlight" id="prev-valor">[ Valor ]</span>, devendo ser pago até o dia 10 (dez) de cada mês, por meio de transferência bancária, PIX ou boleto bancário emitido pela LOCADORA.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 4ª – DAS OBRIGAÇÕES DO LOCATÁRIO</strong><br/>
+            O LOCATÁRIO compromete-se a: (a) utilizar o(s) equipamento(s) somente para as finalidades previstas; (b) conservá-lo(s) em bom estado; (c) não ceder ou sublocar a terceiros sem autorização prévia e por escrito da LOCADORA; (d) devolver o(s) equipamento(s) ao término ou rescisão do contrato nas mesmas condições em que os recebeu.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 5ª – DA RESCISÃO</strong><br/>
+            Qualquer das partes poderá rescindir o presente contrato, mediante notificação prévia por escrito com antecedência mínima de 30 (trinta) dias. A rescisão antecipada por parte do LOCATÁRIO implicará o pagamento de multa equivalente a 2 (duas) mensalidades.
+          </div>
+
+          <div class="clause">
+            <strong>CLÁUSULA 6ª – DO FORO</strong><br/>
+            Fica eleito o foro da comarca de ______________________ para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+          </div>
+
+          <div class="clause" style="text-align:center; margin-top: 28px;">
+            Por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
+          </div>
+
+          <div style="text-align:center; margin: 10px 0 28px; color: #a0aab4; font-size: 13px;">
+            ______________________, <span id="prev-cidade-data">[ Local e Data ]</span>
+          </div>
+
+          <div class="assinaturas">
+            <div>
+              <div class="assinatura-linha">Locamais — LOCADORA</div>
+            </div>
+            <div>
+              <div class="assinatura-linha" id="assin-locatario">[ Locatário ] — LOCATÁRIO</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTÃO -->
+    <button class="btn-submit" id="btn-enviar" onclick="enviarContrato()">
+      <div class="spinner"></div>
+      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span class="btn-text">Gerar PDF e Enviar Contrato</span>
+    </button>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 Locamais Soluções em Locação · Todos os direitos reservados
+  </footer>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <script>
+    // ── GOOGLE APPS SCRIPT URL ──────────────────────────────────────────────
+    // 1. Crie uma planilha no Google Sheets com colunas: Nome, CPF, Data, Valor, Timestamp
+    // 2. No menu Extensions > Apps Script, cole o código do arquivo apps-script.gs
+    // 3. Publique como Web App (Execute as: Me | Who has access: Anyone)
+    // 4. Cole a URL gerada abaixo:
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkhIwr-BCBsTKNaaP-hnv_ZqbbewPwRLYyzXn9-qTTHiEPAWBEy_yAt2IZAI1701GL/exec";
+    // ────────────────────────────────────────────────────────────────────────
+
+    // Máscara CPF
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g,'');
+      if (v.length > 11) v = v.slice(0,11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      e.target.value = v;
+    });
+
+    // Máscara Valor
+    document.getElementById('valor').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g,'');
+      if (!v) { e.target.value = ''; return; }
+      v = (parseInt(v) / 100).toFixed(2);
+      e.target.value = v.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    });
+
+    // Atualizar prévia em tempo real
+    function atualizarPreview() {
+      const nome  = document.getElementById('nome').value.trim()  || '[ Nome do Locatário ]';
+      const cpf   = document.getElementById('cpf').value.trim()   || '[ CPF ]';
+      const dataV = document.getElementById('data').value;
+      const valor = document.getElementById('valor').value.trim() || '[ Valor ]';
+
+      let dataFormatada = '[ Data de Início ]';
+      let cidadeData    = '[ Local e Data ]';
+      if (dataV) {
+        const [y,m,d] = dataV.split('-');
+        const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+        dataFormatada = `${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
+        cidadeData = `______________________, ${dataFormatada}`;
+      }
+
+      document.getElementById('prev-nome').textContent   = nome;
+      document.getElementById('prev-cpf').textContent    = cpf;
+      document.getElementById('prev-data').textContent   = dataFormatada;
+      document.getElementById('prev-valor').textContent  = valor ? `R$ ${valor}` : '[ Valor ]';
+      document.getElementById('prev-cidade-data').textContent = cidadeData;
+      document.getElementById('assin-locatario').textContent  = `${nome} — LOCATÁRIO`;
+    }
+
+    ['nome','cpf','data','valor'].forEach(id =>
+      document.getElementById(id).addEventListener('input', atualizarPreview)
+    );
+
+    // Toast
+    function showToast(msg, type='success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `show ${type}`;
+      setTimeout(() => t.className = '', 3500);
+    }
+
+    // Validar CPF simples
+    function validarCPF(cpf) {
+      const c = cpf.replace(/\D/g,'');
+      return c.length === 11;
+    }
+
+    // Gerar PDF
+    function gerarPDF(dados) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+      const verde    = [26, 107, 46];
+      const cinzaEsc = [26, 32, 44];
+      const cinzaTx  = [74, 85, 104];
+      const W = doc.internal.pageSize.getWidth();
+      const margin = 22;
+      const maxW = W - margin * 2;
+      let y = 0;
+
+      // Cabeçalho verde
+      doc.setFillColor(...verde);
+      doc.rect(0, 0, W, 34, 'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(20);
+      doc.setTextColor(255,255,255);
+      doc.text('Locamais', margin, 16);
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica','normal');
+      doc.setTextColor(200,230,210);
+      doc.text('SOLUÇÕES EM LOCAÇÃO', margin, 22);
+      doc.setFontSize(10);
+      doc.setTextColor(255,255,255);
+      doc.text('CONTRATO DE LOCAÇÃO DE EQUIPAMENTOS', W - margin, 20, {align:'right'});
+      y = 46;
+
+      // Título
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(14);
+      doc.setTextColor(...cinzaEsc);
+      doc.text('CONTRATO DE LOCAÇÃO DE EQUIPAMENTOS', W/2, y, {align:'center'});
+      y += 10;
+
+      // Linha decorativa
+      doc.setDrawColor(...verde);
+      doc.setLineWidth(0.8);
+      doc.line(margin, y, W-margin, y);
+      y += 8;
+
+      const addSection = (titulo, texto) => {
+        if (y > 250) { doc.addPage(); y = 22; }
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(10);
+        doc.setTextColor(...verde);
+        doc.text(titulo, margin, y);
+        y += 5;
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(10);
+        doc.setTextColor(...cinzaTx);
+        const lines = doc.splitTextToSize(texto, maxW);
+        lines.forEach(line => {
+          if (y > 270) { doc.addPage(); y = 22; }
+          doc.text(line, margin, y);
+          y += 5.5;
+        });
+        y += 3;
+      };
+
+      addSection('LOCADORA', 'Locamais Soluções em Locação, inscrita no CNPJ sob o n.º ______________________, com sede na cidade de ______________________, doravante denominada simplesmente LOCADORA.');
+      addSection('LOCATÁRIO', `${dados.nome}, portador do CPF n.º ${dados.cpf}, doravante denominado simplesmente LOCATÁRIO.`);
+      addSection('CLÁUSULA 1ª – DO OBJETO', 'O presente instrumento tem por objeto a locação de equipamento(s) descrito(s) em proposta comercial, conforme acordado entre as partes, para uso pelo LOCATÁRIO durante a vigência do contrato.');
+      addSection('CLÁUSULA 2ª – DO PRAZO', `O contrato vigorará pelo prazo de 12 (doze) meses, com início em ${dados.dataFormatada}, podendo ser renovado por igual período mediante acordo escrito entre as partes.`);
+      addSection('CLÁUSULA 3ª – DO VALOR E FORMA DE PAGAMENTO', `O valor mensal da locação é de R$ ${dados.valor}, devendo ser pago até o dia 10 (dez) de cada mês, por meio de transferência bancária, PIX ou boleto bancário emitido pela LOCADORA.`);
+      addSection('CLÁUSULA 4ª – DAS OBRIGAÇÕES DO LOCATÁRIO', 'O LOCATÁRIO compromete-se a: (a) utilizar o(s) equipamento(s) somente para as finalidades previstas; (b) conservá-lo(s) em bom estado; (c) não ceder ou sublocar a terceiros sem autorização prévia e por escrito da LOCADORA; (d) devolver o(s) equipamento(s) ao término ou rescisão do contrato nas mesmas condições em que os recebeu.');
+      addSection('CLÁUSULA 5ª – DA RESCISÃO', 'Qualquer das partes poderá rescindir o presente contrato, mediante notificação prévia por escrito com antecedência mínima de 30 (trinta) dias. A rescisão antecipada por parte do LOCATÁRIO implicará o pagamento de multa equivalente a 2 (duas) mensalidades.');
+      addSection('CLÁUSULA 6ª – DO FORO', 'Fica eleito o foro da comarca de ______________________ para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.');
+
+      y += 4;
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...cinzaTx);
+      doc.text('Por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma.', margin, y, {maxWidth: maxW, align:'justify'});
+      y += 10;
+      doc.text(`______________________, ${dados.dataFormatada}`, W/2, y, {align:'center'});
+      y += 24;
+
+      // Assinaturas
+      doc.setDrawColor(150,160,170);
+      doc.setLineWidth(0.5);
+      const col1 = margin + maxW * 0.15;
+      const col2 = margin + maxW * 0.65;
+      const sigW = maxW * 0.3;
+      doc.line(col1, y, col1 + sigW, y);
+      doc.line(col2, y, col2 + sigW, y);
+      y += 5;
+      doc.setFontSize(9);
+      doc.setTextColor(...cinzaTx);
+      doc.text('Locamais — LOCADORA', col1 + sigW/2, y, {align:'center'});
+      doc.text(`${dados.nome} — LOCATÁRIO`, col2 + sigW/2, y, {align:'center'});
+      y += 16;
+
+      // Rodapé
+      doc.setFillColor(245,250,246);
+      doc.rect(0, doc.internal.pageSize.getHeight()-14, W, 14, 'F');
+      doc.setFontSize(8);
+      doc.setTextColor(160,170,180);
+      doc.text('© 2025 Locamais Soluções em Locação · locamais.com.br', W/2, doc.internal.pageSize.getHeight()-5, {align:'center'});
+
+      doc.save(`Contrato_Locamais_${dados.nome.replace(/\s+/g,'_')}.pdf`);
+    }
+
+    // Envio principal
+    async function enviarContrato() {
+      const nome  = document.getElementById('nome').value.trim();
+      const cpf   = document.getElementById('cpf').value.trim();
+      const dataV = document.getElementById('data').value;
+      const valor = document.getElementById('valor').value.trim();
+
+      if (!nome || !cpf || !dataV || !valor) {
+        showToast('⚠️ Preencha todos os campos antes de continuar.', 'error');
+        return;
+      }
+      if (!validarCPF(cpf)) {
+        showToast('⚠️ CPF inválido. Verifique o número digitado.', 'error');
+        return;
+      }
+
+      const [y,m,d] = dataV.split('-');
+      const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+      const dataFormatada = `${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
+
+      const btn = document.getElementById('btn-enviar');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        // 1. Gerar PDF
+        gerarPDF({ nome, cpf, valor, dataFormatada });
+
+        // 2. Enviar para Google Sheets
+        if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'COLE_AQUI_A_URL_DO_APPS_SCRIPT') {
+          const body = new URLSearchParams({ nome, cpf, data: dataFormatada, valor });
+          await fetch(APPS_SCRIPT_URL, { method: 'POST', body });
+          showToast('✅ PDF gerado e dados salvos na planilha!', 'success');
+        } else {
+          showToast('✅ PDF gerado com sucesso!', 'success');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('❌ Erro ao processar. Tente novamente.', 'error');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
