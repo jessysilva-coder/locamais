@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lançamento de Despesas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --laranja: #FF6B35;
+      --laranja-claro: #FF8E5C;
+      --rosa: #FF4D8D;
+      --rosa-claro: #FFB3CC;
+      --creme: #FFF6EE;
+      --creme-2: #FFEFE0;
+      --tinta: #2B1810;
+      --tinta-suave: #6B4A3A;
+      --borda: #F2D9C5;
+      --branco: #FFFFFF;
+      --sombra: 0 10px 30px rgba(255, 107, 53, 0.12), 0 4px 10px rgba(255, 77, 141, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: var(--tinta);
+      background: var(--creme);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255, 77, 141, 0.18) 0%, transparent 38%),
+        radial-gradient(circle at 88% 8%, rgba(255, 107, 53, 0.22) 0%, transparent 42%),
+        radial-gradient(circle at 92% 92%, rgba(255, 179, 204, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 8% 95%, rgba(255, 142, 92, 0.20) 0%, transparent 40%);
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--branco);
+      border: 1.5px solid var(--borda);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--tinta-suave);
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--laranja), var(--rosa));
+      box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+    }
+
+    h1 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(34px, 6vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    h1 .grad {
+      background: linear-gradient(100deg, var(--laranja) 0%, var(--rosa) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      color: var(--tinta-suave);
+      font-size: 16px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--branco);
+      border-radius: 28px;
+      padding: 36px 32px;
+      box-shadow: var(--sombra);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--laranja) 0%, var(--rosa) 50%, var(--laranja-claro) 100%);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--tinta);
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    label .req { color: var(--rosa); font-weight: 700; }
+
+    input, select, textarea {
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--tinta);
+      background: var(--creme);
+      border: 1.5px solid var(--borda);
+      border-radius: 14px;
+      padding: 13px 14px;
+      width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      outline: none;
+    }
+
+    input::placeholder, textarea::placeholder { color: #B89A88; }
+
+    input:hover, select:hover, textarea:hover { border-color: var(--laranja-claro); }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--laranja);
+      background: var(--branco);
+      box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.12);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 92px;
+      font-family: inherit;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23FF6B35' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    .valor-wrap { position: relative; }
+    .valor-wrap input { padding-left: 42px; }
+    .valor-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: var(--laranja);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    button {
+      margin-top: 28px;
+      width: 100%;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 0.01em;
+      color: var(--branco);
+      background: linear-gradient(100deg, var(--laranja) 0%, var(--rosa) 100%);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .2s ease, filter .15s ease;
+      box-shadow: 0 8px 22px rgba(255, 77, 141, 0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(255, 77, 141, 0.36);
+      filter: brightness(1.04);
+    }
+
+    button:active:not(:disabled) { transform: translateY(0); }
+
+    button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .arrow {
+      transition: transform .2s ease;
+    }
+    button:hover .arrow { transform: translateX(3px); }
+
+    .status {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      min-height: 22px;
+      transition: color .2s ease;
+    }
+
+    .status.success { color: #1F8A4C; }
+    .status.error { color: #C8254F; }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--tinta-suave);
+    }
+    .footer .heart { color: var(--rosa); }
+
+    /* Animação suave de entrada */
+    .card, .header {
+      animation: rise .6s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .header { animation-delay: .05s; }
+    .card { animation-delay: .15s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      .card { padding: 28px 22px; border-radius: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <span class="badge"><span class="dot"></span> Reembolso de despesas</span>
+      <h1>Lance sua <span class="grad">despesa</span> aqui ✨</h1>
+      <p class="subtitle">Preencha o formulário abaixo e seu pedido segue direto para o financeiro.</p>
+    </header>
+
+    <div class="card">
+      <form id="form-despesa" autocomplete="off">
+        <div class="grid">
+          <div class="field full">
+            <label for="nome">Nome do solicitante <span class="req">*</span></label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Maria Silva" required />
+          </div>
+
+          <div class="field">
+            <label for="data">Data <span class="req">*</span></label>
+            <input id="data" name="data" type="date" required />
+          </div>
+
+          <div class="field">
+            <label for="categoria">Categoria <span class="req">*</span></label>
+            <select id="categoria" name="categoria" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Alimentação">🍽️ Alimentação</option>
+              <option value="Transporte">🚗 Transporte</option>
+              <option value="Hospedagem">🏨 Hospedagem</option>
+              <option value="Material de escritório">📎 Material de escritório</option>
+              <option value="Combustível">⛽ Combustível</option>
+              <option value="Viagem">✈️ Viagem</option>
+              <option value="Outros">✨ Outros</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="descricao">Descrição / Motivo <span class="req">*</span></label>
+            <textarea id="descricao" name="descricao" placeholder="Conte rapidinho o que foi essa despesa..." required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="valor">Valor <span class="req">*</span></label>
+            <div class="valor-wrap">
+              <span class="prefix">R$</span>
+              <input id="valor" name="valor" type="number" step="0.01" min="0" placeholder="0,00" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pagamento">Forma de pagamento <span class="req">*</span></label>
+            <select id="pagamento" name="pagamento" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Dinheiro">💵 Dinheiro</option>
+              <option value="Pix">⚡ Pix</option>
+              <option value="Cartão de crédito">💳 Cartão de crédito</option>
+              <option value="Cartão de débito">💳 Cartão de débito</option>
+              <option value="Boleto">🧾 Boleto</option>
+              <option value="Transferência">🏦 Transferência</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-enviar">
+          <span class="btn-label">Enviar despesa</span>
+          <span class="arrow">→</span>
+        </button>
+
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <p class="footer">Feito com <span class="heart">♥</span> para facilitar seus reembolsos</p>
+  </div>
+
+  <script>
+    // URL do Apps Script (será preenchida na Etapa 4)
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB2e3VRYsjF8d3F7Yw6LXrvD19Fi7ak7PD1A6-MwWvopBBLErY87kXBvixB0Um9gvxFA/exec";
+
+    // Preencher data com hoje por padrão
+    document.getElementById('data').valueAsDate = new Date();
+
+    const form = document.getElementById('form-despesa');
+    const btn = document.getElementById('btn-enviar');
+    const btnLabel = btn.querySelector('.btn-label');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'status';
+      status.textContent = '';
+
+      const dados = {
+        nome: form.nome.value.trim(),
+        data: form.data.value,
+        categoria: form.categoria.value,
+        descricao: form.descricao.value.trim(),
+        valor: form.valor.value,
+        pagamento: form.pagamento.value
+      };
+
+      btn.disabled = true;
+      btnLabel.textContent = 'Enviando...';
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(dados)
+        });
+
+        status.className = 'status success';
+        status.textContent = '✓ Despesa enviada com sucesso!';
+        form.reset();
+        document.getElementById('data').valueAsDate = new Date();
+      } catch (err) {
+        status.className = 'status error';
+        status.textContent = 'Ops! Não foi possível enviar. Tente novamente.';
+      } finally {
+        btn.disabled = false;
+        btnLabel.textContent = 'Enviar despesa';
+      }
+    });
+  </script>
+</body>
+</html>
